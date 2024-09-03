@@ -97,6 +97,8 @@ class ListFilmsController extends Controller
         //
 
         $film->delete();
-        return redirect()->route('films.index');
+
+    
+    return redirect()->route('films.index');
     }
 }

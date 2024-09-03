@@ -17,8 +17,8 @@ Route::middleware([
     })->name('dashboard');
 });
 
+Route::resource('films', ListFilmsController::class);
 
 Route::get('/edit_films', [ListFilmsController::class, 'edit'])->name("edit_films");
-Route::delete('/destroy_films/{film}', [ListFilmsController::class, 'destroy'])->name("destroy_films");
+
 Route::put('/update_films', [ListFilmsController::class, 'update'])->name("update_films");
-Route::get('/show_films/{film}', [ListFilmsController::class, 'show'])->name("show_films");
