@@ -18,7 +18,7 @@ Route::middleware([
     })->name('dashboard');
 });
 
-// la route de type resource pour les liens de chaque methode 
+// la route de type resource pour gerer les liens de chaque methode 
 
 Route::resource('films', ListFilmsController::class)->middleware([
     'auth:sanctum',
@@ -26,5 +26,5 @@ Route::resource('films', ListFilmsController::class)->middleware([
     'verified',
 ]);
 
-// le lien utiliser pour gerer la methode de recherche 
+// le lien utiliser pour la methode de recherche 
 Route::get('/search_film', [ListFilmsController::class, 'search'])->name("search_film");
