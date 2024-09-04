@@ -97,6 +97,10 @@ class ListFilmsController extends Controller
     return redirect()->route('films.index');
     }
 
+
+    /**
+     * la methode store_Api pour recuperer les donner depuit l'Api et stocker dans la base de donnes
+     */
     public function store_APi(){
     
         $client = new Client([
@@ -136,6 +140,10 @@ class ListFilmsController extends Controller
         }
     }
 
+
+    /**
+     * la methode search pour la chercher des film apartir de la langue originale ou le titre puis lister
+     */
     public function search(Request $request){
         $query = ListFilms::query();
 
