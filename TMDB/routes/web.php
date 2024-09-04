@@ -7,6 +7,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// le middleware auth:sanctum pour arrêt de l'accès sans authentification
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -17,8 +18,13 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::resource('films', ListFilmsController::class);
+// la route de type resource pour les liens de chaque methode 
 
-Route::get('/edit_films', [ListFilmsController::class, 'edit'])->name("edit_films");
+Route::resource('films', ListFilmsController::class)->middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+]);
 
-Route::put('/update_films', [ListFilmsController::class, 'update'])->name("update_films");
+// le lien utiliser pour la methode de recherche 
+Route::get('/search_film', [ListFilmsController::class, 'search'])->name("search_film");

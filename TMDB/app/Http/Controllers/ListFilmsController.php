@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class ListFilmsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * index pour recuperer et lister les films
      */
     public function index()
     {
@@ -18,18 +18,87 @@ class ListFilmsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * la redirection vers la page create
      */
     public function create()
     {
         //
+        return view("films.create");
     }
 
     /**
-     * Store a newly created resource in storage.
+     * store pour le stockage d'un film 
      */
     public function store(Request $request)
     {
+        $validation = $request->validate([
+                "film_id"=>"required|numeric|unique:list_films,film_id",
+                "original_language"=>"required|",
+                "title"=>"required|",
+                "release_date"=>"required|date",
+                "overview"=>"required|",
+        ]);
+
+        ListFilms::create($validation);
+ 
+        return redirect()->route('films.index');
+
+
+     
+    }
+
+    /**
+     * la redirection vers la page de detaille 
+     */
+    public function show(ListFilms $film)
+    {
+        //
+        return view("films.show", ['film' => $film]);
+    }
+
+    /**
+     * la redirection vers la page de modification
+     */
+    public function edit(ListFilms $film)
+    {
+        //
+        return view("films.edit",['film' => $film]);
+    }
+
+    /**
+     * la methode update pour modifier les donnes d'un film
+     */
+    public function update(Request $request, ListFilms $film)
+    {
+        //
+        $validation = $request->validate([
+            "film_id"=>"required|numeric",
+            "original_language"=>"required|",
+            "title"=>"required|",
+            "release_date"=>"required|date",
+            "overview"=>"required|",
+        ]);
+
+        $film->update($validation);
+
+    return redirect()->route('films.index');
+    }
+
+    /**
+     * la methode de suppression d'un film
+     */
+    public function destroy(ListFilms $film)
+    {
+        //
+
+        $film->delete();
+
+    
+    return redirect()->route('films.index');
+    }
+
+    public function store_APi(){
+    
         $client = new Client([
             'verify' => false,
         ]);
@@ -54,7 +123,11 @@ class ListFilmsController extends Controller
                         'overview' => $film['overview'],
                     ]
                 );
+
             }
+            return response()->json([
+                "message de succes" => "les films sont stockes dans la base des donnees avec succes"
+            ]);
     
             
     
@@ -63,42 +136,17 @@ class ListFilmsController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ListFilms $film)
-    {
-        //
-        return view("films.show", ['film' => $film]);
-    }
+    public function search(Request $request){
+        $query = ListFilms::query();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ListFilms $listFilms)
-    {
-        //
-        return view("films.edit");
-    }
+        if ($search = $request->query('search')) {
+            $query->where('title', 'like', "%{$search}%")
+                ->orWhere('original_language', 'like', "%{$search}%");
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ListFilms $listFilms)
-    {
-        //
-    }
+        $films = $query->paginate(7);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ListFilms $film)
-    {
-        //
+        return view('films.index', ['films' => $films]);
 
-        $film->delete();
-
-    
-    return redirect()->route('films.index');
     }
 }

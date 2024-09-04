@@ -8,5 +8,5 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/List_films', [ListFilmsController::class, 'index'])->name("List_films");
-Route::get('/store_films', [ListFilmsController::class, 'store'])->name("store_films");
+// utiliser le lien /store_films pour stocker le resultat de l'api dans la base de donnee
+Route::get('/store_films', [ListFilmsController::class, 'store_APi'])->name("store_films");
